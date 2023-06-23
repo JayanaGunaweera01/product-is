@@ -25,7 +25,7 @@ jobs:
         run: echo Running the PR builder for PR - ${{ github.event.inputs.pr }}
       - name: Comment build info
         run: |
-          cd ./scripts
+          cd home/runner/work/product-is/product-is/.github/scripts
           ls -a 
           pwd
           owner=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 4)
