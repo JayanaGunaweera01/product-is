@@ -25,7 +25,8 @@ jobs:
         run: echo Running the PR builder for PR - ${{ github.event.inputs.pr }}
       - name: Comment build info
         run: |
-          cd ./wso2/product-is/master/.github/scripts
+          cd ./scripts
+          ls -a 
           pwd
           owner=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 4)
           repo=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 5)
