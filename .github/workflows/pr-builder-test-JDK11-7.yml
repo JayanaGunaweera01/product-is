@@ -73,6 +73,7 @@ jobs:
           JAVA_11_HOME: ${{env.J11HOME}}
         run: |
           wget https://raw.githubusercontent.com/wso2/product-is/master/.github/scripts/pr-builder-7.sh
+          pwd
           bash pr-builder-7.sh
       - name: Archive PR diff file
         if: always()
