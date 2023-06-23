@@ -25,6 +25,8 @@ jobs:
         run: echo Running the PR builder for PR - ${{ github.event.inputs.pr }}
       - name: Comment build info
         run: |
+          cd ./wso2/product-is/master/.github/scripts
+          pwd
           owner=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 4)
           repo=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 5)
           pr_number=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 7)
@@ -46,7 +48,6 @@ jobs:
           distribution: "adopt"
       - name: Echo java 11 home
         run: |
-          pwd
           echo "J11HOME=$JAVA_HOME" >> ${GITHUB_ENV}
       - name: Build init
         run: |
@@ -74,7 +75,6 @@ jobs:
           JAVA_11_HOME: ${{env.J11HOME}}
         run: |
           wget https://raw.githubusercontent.com/wso2/product-is/master/.github/scripts/pr-builder-7.sh
-          pwd
           bash pr-builder-7.sh
       - name: Archive PR diff file
         if: always()
