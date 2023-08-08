@@ -90,6 +90,7 @@ cd IS_HOME_OLD
 echo "${GREEN}==> Navigated to home folder successfully${RESET}"
 
 # Download needed wso2IS zip
+chmod +x download-GA-pack.sh
 bash download-GA-pack.sh "$os" "$keyJsonFile"
 
 #cd "$AUTOMATION_HOME"
@@ -173,6 +174,7 @@ echo "${GREEN}==> Created a directory for placing latest wso2IS${RESET}"
 cd "$IS_HOME_NEW"
 
 # Download needed (latest) wso2IS zip
+chmod +x download-GA-pack.sh
 bash download-GA-pack.sh "$os" "$keyJsonFile"
 
 cd "$AUTOMATION_HOME"
