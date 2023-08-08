@@ -132,20 +132,68 @@ echo "file_id: $file_id"
 file_url="https://www.googleapis.com/drive/v3/files/"$file_id"?alt=media"
 
 # Download the file using the access token
-response=$(curl "$file_url" \
+set -euo pipefail
+
+base64var() {
+    printf "$1" | base64stream
+}
+
+base64stream() {
+    base64 | tr '/+' '_-' | tr -d '=\n'
+}
+
+keyJsonFile=$1
+scope="https://www.googleapis.com/auth/drive.readonly"
+valid_for_sec="${3:-3600}"
+valid_for_sec_numeric=$(echo "$valid_for_sec" | tr -d -c '[:digit:]')
+private_key=$(jq -r .private_key "$keyJsonFile")
+sa_email=$(jq -r .client_email "$keyJsonFile") || { echo "Error extracting client_email from the JSON file."; exit 1; }
+
+header='{"alg":"RS256","typ":"JWT"}'
+# Calculate the expiration time as 'valid_for_sec' seconds from now
+exp=$(($(date +%s) + 60))  # Set the token to expire in 60 seconds
+# The issued at time should be the current time
+iat=$(date +%s)
+claim=$(cat <<EOF | jq -c
+  {
+    "iss": "$sa_email",
+    "scope": "$scope",
+    "aud": "https://www.googleapis.com/oauth2/v4/token",
+    "exp": $exp,
+    "iat": $iat
+  }
+EOF
+)
+
+request_body="$(base64var "$header").$(base64var "$claim")"
+signature=$(echo -n "$request_body" | openssl dgst -sha256 -sign <(echo "$private_key") -binary | base64stream)
+
+echo "$request_body.$signature"
+
+jwt_token=$(printf "%s.%s" "$request_body" "$signature")
+
+# Manually construct the POST data for token request
+data="grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=$jwt_token"
+
+# Make the token request to get the access token
+token_response=$(curl -s -X POST -d "$data" "https://www.googleapis.com/oauth2/v4/token")
+
+# Extract the access token from the response
+access_token=$(echo "$token_response" | jq -r .access_token)
+
+# Download the file using the access token
+response=$(curl -s -L -o wso2is.zip "$file_url" \
   --header "Authorization: Bearer $access_token" \
-  --header "Accept: application/json" \
-  --compressed -o wso2is.zip)
-wait $!
+  --header "Accept: application/json")
 
 # Check if the response contains any error message
 if echo "$response" | grep -q '"error":'; then
   # If there is an error, print the failure message with the error description
   error_description=$(echo "$response" | jq -r '.error_description')
-  echo -e "${RED}${BOLD}Failure in downloading Identity Server $error_description${NC}"
+  echo -e "${RED}${BOLD}Failure in downloading Identity Server "$currentVersion" $error_description${NC}"
 else
   # If there is no error, print the success message
-  echo -e "${PURPLE}${BOLD}Success: IS Pack downloaded successfully.${NC}"
+  echo -e "${PURPLE}${BOLD}Success: "$currentVersion" downloaded successfully.${NC}"
 fi
 
 # Unzip IS archive
@@ -279,28 +327,76 @@ echo "file_id: $file_id"
 file_url="https://www.googleapis.com/drive/v3/files/"$file_id"?alt=media"
 
 # Download the file using the access token
-response=$(curl "$file_url" \
+set -euo pipefail
+
+base64var() {
+    printf "$1" | base64stream
+}
+
+base64stream() {
+    base64 | tr '/+' '_-' | tr -d '=\n'
+}
+
+keyJsonFile=$1
+scope="https://www.googleapis.com/auth/drive.readonly"
+valid_for_sec="${3:-3600}"
+valid_for_sec_numeric=$(echo "$valid_for_sec" | tr -d -c '[:digit:]')
+private_key=$(jq -r .private_key "$keyJsonFile")
+sa_email=$(jq -r .client_email "$keyJsonFile") || { echo "Error extracting client_email from the JSON file."; exit 1; }
+
+header='{"alg":"RS256","typ":"JWT"}'
+# Calculate the expiration time as 'valid_for_sec' seconds from now
+exp=$(($(date +%s) + 60))  # Set the token to expire in 60 seconds
+# The issued at time should be the current time
+iat=$(date +%s)
+claim=$(cat <<EOF | jq -c
+  {
+    "iss": "$sa_email",
+    "scope": "$scope",
+    "aud": "https://www.googleapis.com/oauth2/v4/token",
+    "exp": $exp,
+    "iat": $iat
+  }
+EOF
+)
+
+request_body="$(base64var "$header").$(base64var "$claim")"
+signature=$(echo -n "$request_body" | openssl dgst -sha256 -sign <(echo "$private_key") -binary | base64stream)
+
+echo "$request_body.$signature"
+
+jwt_token=$(printf "%s.%s" "$request_body" "$signature")
+
+# Manually construct the POST data for token request
+data="grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=$jwt_token"
+
+# Make the token request to get the access token
+token_response=$(curl -s -X POST -d "$data" "https://www.googleapis.com/oauth2/v4/token")
+
+# Extract the access token from the response
+access_token=$(echo "$token_response" | jq -r .access_token)
+
+# Download the file using the access token
+response=$(curl -s -L -o wso2is.zip "$file_url" \
   --header "Authorization: Bearer $access_token" \
-  --header "Accept: application/json" \
-  --compressed -o wso2is.zip)
-wait $!
+  --header "Accept: application/json")
 
 # Check if the response contains any error message
 if echo "$response" | grep -q '"error":'; then
   # If there is an error, print the failure message with the error description
   error_description=$(echo "$response" | jq -r '.error_description')
-  echo -e "${RED}${BOLD}Failure in downloading Identity Server $error_description${NC}"
+  echo -e "${RED}${BOLD}Failure in downloading Identity Server "$migratingVersion" $error_description${NC}"
 else
   # If there is no error, print the success message
-  echo -e "${PURPLE}${BOLD}Success: IS Pack downloaded successfully.${NC}"
+  echo -e "${PURPLE}${BOLD}Success: "$migratingVersion" downloaded successfully.${NC}"
 fi
-
-echo "${GREEN}==> Downloaded "$migratingVersion" zip${RESET}"
 
 # Unzip IS archive
 unzip -qq *.zip &
 wait $!
 echo "${GREEN}==> Unzipped "$migratingVersion" zip${RESET}"
+
+ls -a
 
 cd "$AUTOMATION_HOME"
 chmod +x download-migration-client.sh
