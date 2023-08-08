@@ -7,7 +7,6 @@ RESET='\033[0m'           # reset color
 
 # Get the value of the inputs
 os=$1
-keyJsonFile=$2
 currentVersion=$3
 
 # Source the env.sh file
@@ -58,7 +57,7 @@ base64stream() {
     base64 | tr '/+' '_-' | tr -d '=\n'
 }
 
-keyJsonFile=$1
+keyJsonFile=$2
 scope="https://www.googleapis.com/auth/drive.readonly"
 valid_for_sec="${3:-3600}"
 valid_for_sec_numeric=$(echo "$valid_for_sec" | tr -d -c '[:digit:]')
