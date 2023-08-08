@@ -140,10 +140,6 @@ jobs:
       - name: Save JSON credentials to file
         run: |
            echo '${{ secrets.JSON }}' > creds.json
-           private_key=$(jq -r .private_key creds.json)
-           sa_email=$(jq -r .client_email creds.json)
-           rm creds.json
-        shell: bash
       - name: Execute Migration Automation Script Ubuntu
         run: |
             chmod +x ${{ github.workspace }}/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh 
