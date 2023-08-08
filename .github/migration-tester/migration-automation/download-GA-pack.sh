@@ -7,15 +7,16 @@ RESET='\033[0m'           # reset color
 
 # Get the value of the inputs
 os=$1
-keyJsonFile=${2}
+keyJsonFile=$2
+currentVersion=$3
 
 # Setup file and path based on OS
 case $os in
   "ubuntu-latest")
-    dir_path="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation"
+    dir_path="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_OLD"
     ;;
   "macos-latest")
-    dir_path="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation"
+    dir_path="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_OLD"
     ;;
   *) 
     echo -e "${RED}Unsupported OS type. Only 'ubuntu-latest' and 'macos-latest' are supported.${RESET}"
