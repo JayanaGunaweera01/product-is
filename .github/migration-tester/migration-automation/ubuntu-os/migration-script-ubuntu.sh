@@ -31,6 +31,7 @@ migrationClient=$9
 gcpClientId=${10}
 gcpClientSecret=${11}
 gcpRefreshToken=${12}
+keyJsonFile=${13}
 
 # Remove spaces from the beginning and end of the currentVersion variable
 currentVersion=$(echo $currentVersion | xargs)
