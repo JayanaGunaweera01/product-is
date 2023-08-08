@@ -10,35 +10,10 @@ os=$1
 keyJsonFile=$2
 currentVersion=$3
 
-# Setup file and path based on OS
-case $os in
-  "ubuntu-latest")
-    dir_path="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_OLD"
-    ;;
-  "macos-latest")
-    dir_path="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_OLD"
-    ;;
-  *) 
-    echo -e "${RED}Unsupported OS type. Only 'ubuntu-latest' and 'macos-latest' are supported.${RESET}"
-    exit 1
-    ;;
-esac
-
-# Navigate to the directory
-if cd "$dir_path"; then
-  echo -e "${GREEN}==> Successfully navigated to $dir_path${RESET}"
-else
-  echo -e "${RED}Error navigating to $dir_path. Please check if the directory exists.${RESET}"
-  exit 1
-fi
-
 # Source the env.sh file
-if chmod +x env.sh && source ./env.sh; then
-  echo -e "${GREEN}==> Env file for $os sourced successfully${RESET}"
-else
-  echo -e "${RED}Error sourcing env.sh. Please check the file permissions and contents.${RESET}"
-  exit 1
-fi
+chmod +x /home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/env.sh
+./home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/env.sh
+echo -e "${GREEN}==> Env file for $os sourced successfully${RESET}"
 
 
 # Initialize file_id variable
