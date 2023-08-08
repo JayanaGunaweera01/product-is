@@ -9,6 +9,14 @@ RESET='\033[0m'           # reset color
 os=$1
 keyJsonFile=${2}
 
+# Create directory for placing wso2IS
+mkdir IS_HOME_OLD
+echo "${GREEN}==> Created a directory to place wso2IS${RESET}"
+
+# Navigate to folder
+cd IS_HOME_OLD
+echo "${GREEN}==> Navigated to home folder successfully${RESET}"
+
 # Setup file and path based on OS
 case $os in
   "ubuntu-latest")
