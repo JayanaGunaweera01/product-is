@@ -11,8 +11,8 @@ keyJsonFile=$2
 currentVersion=$3
 
 # Source the env.sh file
-chmod +x /home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/env.sh
-./home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/env.sh
+chmod +x ./env.sh
+./env.sh
 echo -e "${GREEN}==> Env file for $os sourced successfully${RESET}"
 
 
