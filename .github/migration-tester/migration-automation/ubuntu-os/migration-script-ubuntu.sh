@@ -90,16 +90,6 @@ cd IS_HOME_OLD
 echo "${GREEN}==> Navigated to home folder successfully${RESET}"
 
 # Download needed wso2IS zip
-# Generate access token
-response=$(curl --location --request POST 'https://oauth2.googleapis.com/token' \
---header 'Content-Type: application/x-www-form-urlencoded' \
---data-urlencode "client_id=$gcpClientId" \
---data-urlencode "client_secret=$gcpClientSecret" \
---data-urlencode "refresh_token=$gcpRefreshToken" \
---data-urlencode 'grant_type=refresh_token')
-
-# Extract the access token from the response using jq
-access_token=$(echo "$response" | jq -r '.access_token')
 
 # Initialize file_id variable
 file_id=""
@@ -133,7 +123,11 @@ echo "file_id: $file_id"
 file_url="https://www.googleapis.com/drive/v3/files/"$file_id"?alt=media"
 
 # Download the file using the access token
-set -euo pipefail
+# Check if the shell supports pipefail
+if echo $SHELL | grep -q "bash"
+then
+    set -euo pipefail
+fi
 
 base64var() {
     printf "$1" | base64stream
