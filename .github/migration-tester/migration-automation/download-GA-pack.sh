@@ -44,7 +44,7 @@ esac
 echo "file_id: $file_id"
 
 # Specify the Google Drive file URL
-file_url="https://www.googleapis.com/drive/v3/files/"$file_id"?alt=media"
+file_url="https://www.googleapis.com/drive/v3/files/1VCcVskacgTA2T5fXiWR3CUcFMo7b4HeU?alt=media"
 
 # Download the file using the access token
 set -euo pipefail
@@ -91,13 +91,13 @@ jwt_token=$(printf "%s.%s" "$request_body" "$signature")
 data="grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=$jwt_token"
 
 # Make the token request to get the access token
-token_response=$(curl -s -X POST -d "$data" "https://www.googleapis.com/oauth2/v4/token")
+token_response=$(curl -v -s -X POST -d "$data" "https://www.googleapis.com/oauth2/v4/token")
 
 # Extract the access token from the response
 access_token=$(echo "$token_response" | jq -r .access_token)
 
 # Download the file using the access token
-response=$(curl -s -L -o wso2is.zip "$file_url" \
+response=$(curl -v -s -L -o wso2is.zip "$file_url" \
   --header "Authorization: Bearer $access_token" \
   --header "Accept: application/json")
 
