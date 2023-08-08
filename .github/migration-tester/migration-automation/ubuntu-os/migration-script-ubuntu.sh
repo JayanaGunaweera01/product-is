@@ -81,6 +81,16 @@ wait $!
 
 cd "$AUTOMATION_HOME"
 
+# Create directory for placing wso2IS
+mkdir IS_HOME_OLD
+echo "${GREEN}==> Created a directory to place wso2IS${RESET}"
+
+# Navigate to folder
+cd IS_HOME_OLD
+echo "${GREEN}==> Navigated to home folder successfully${RESET}"
+
+cd "$AUTOMATION_HOME"
+
 # Download needed wso2IS zip
 chmod +x download-GA-pack.sh
 bash download-GA-pack.sh "$os" "$keyJsonFile"
