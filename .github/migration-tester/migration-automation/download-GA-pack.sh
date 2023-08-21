@@ -5,44 +5,6 @@ GREEN='\033[0;32m\033[1m' # green color
 RED='\033[0;31m\033[1m'   # red color
 NC='\033[0m'           # reset color
 
-# Get the value of the inputs
-os=$1
-currentVersion=$3
-
-# Source the env.sh file
-chmod +x ./env.sh
-./env.sh
-echo -e "${GREEN}==> Env file for $os sourced successfully${RESET}"
-
-
-# Initialize file_id variable
-file_id=""
-
-# Check the value of currentVersion and assign the corresponding environment variable to file_id
-case $currentVersion in
-  5.9.0)
-    file_id="$FILE_ID_5_9"
-    ;;
-  5.10.0)
-    file_id="$FILE_ID_5_10"
-    ;;
-  5.11.0)
-    file_id="$FILE_ID_5_11"
-    ;;
-  6.0.0)
-    file_id="$FILE_ID_6_0"
-    ;;
-  6.1.0)
-    file_id="$FILE_ID_6_1"
-    ;;
-  *)
-    echo "No action taken.Please assign a value in env.sh if you haven't assigned a value for file ID."
-    ;;
-esac
-
-# Use the file_id variable in downloading the IS zip
-echo "file_id: $file_id"
-
 # Specify the Google Drive file URL
 file_url="https://www.googleapis.com/drive/v3/files/15nZ0gwIo-4YMibykGD979BG_olw5ChgV?alt=media"
 
@@ -59,7 +21,7 @@ base64stream() {
     base64 | tr '/+' '_-' | tr -d '=\n'
 }
 
-keyJsonFile=$2
+keyJsonFile=$1
 scope="https://www.googleapis.com/auth/drive.readonly"
 valid_for_sec="${3:-3600}"
 valid_for_sec_numeric=$(echo "$valid_for_sec" | tr -d -c '[:digit:]')
