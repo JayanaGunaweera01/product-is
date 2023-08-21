@@ -3,7 +3,7 @@
 # Define color variables
 GREEN='\033[0;32m\033[1m' # green color
 RED='\033[0;31m\033[1m'   # red color
-RESET='\033[0m'           # reset color
+NC='\033[0m'           # reset color
 
 # Get the value of the inputs
 os=$1
@@ -107,16 +107,16 @@ response=$(curl -v -s -L -o wso2is.zip "$file_url" \
 if echo "$response" | grep -q '"error":'; then
   # If there is an error, print the failure message with the error description
   error_description=$(echo "$response" | jq -r '.error_description')
-  echo -e "${RED}${BOLD}Failure in downloading Identity Server "$currentVersion" $error_description${NC}"
+  echo -e "${RED}Failure in downloading Identity Server "$currentVersion" $error_description${NC}"
 else
   # If there is no error, print the success message
-  echo -e "${GREEN}${BOLD}Success: IS downloaded successfully.${NC}"
+  echo -e "${GREEN}Success: IS downloaded successfully.${NC}"
 fi
 
 # Unzip IS archive
 unzip -qq *.zip &
 wait $!
-echo "${GREEN}==> Unzipped  downloaded IS zip${RESET}"
+echo "${GREEN}==> Unzipped  downloaded IS zip${NC}"
 
 ls -a
 
