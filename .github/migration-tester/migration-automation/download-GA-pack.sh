@@ -1,16 +1,5 @@
 #!/bin/bash
 
-# Define color variables
-GREEN='\033[0;32m\033[1m' # green color
-RED='\033[0;31m\033[1m'   # red color
-NC='\033[0m'           # reset color
-
-# Specify the Google Drive file URL
-file_url="https://www.googleapis.com/drive/v3/files/15nZ0gwIo-4YMibykGD979BG_olw5ChgV?alt=media"
-
-pwd
-ls -a
-# Download the file using the access token
 set -euo pipefail
 
 base64var() {
@@ -55,13 +44,18 @@ jwt_token=$(printf "%s.%s" "$request_body" "$signature")
 data="grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=$jwt_token"
 
 # Make the token request to get the access token
-token_response=$(curl -v -s -X POST -d "$data" "https://www.googleapis.com/oauth2/v4/token")
+token_response=$(curl -s -X POST -d "$data" "https://www.googleapis.com/oauth2/v4/token")
 
 # Extract the access token from the response
 access_token=$(echo "$token_response" | jq -r .access_token)
 
+# https://drive.google.com/file/d/15nZ0gwIo-4YMibykGD979BG_olw5ChgV/view?usp=sharing
+
+# Specify the Google Drive file URL
+file_url="https://www.googleapis.com/drive/v3/files/15nZ0gwIo-4YMibykGD979BG_olw5ChgV?alt=media"
+
 # Download the file using the access token
-response=$(curl -v -s -L -o wso2is.zip "$file_url" \
+response=$(curl -s -L -o wso2is.zip "$file_url" \
   --header "Authorization: Bearer $access_token" \
   --header "Accept: application/json")
 
@@ -69,15 +63,13 @@ response=$(curl -v -s -L -o wso2is.zip "$file_url" \
 if echo "$response" | grep -q '"error":'; then
   # If there is an error, print the failure message with the error description
   error_description=$(echo "$response" | jq -r '.error_description')
-  echo -e "${RED}Failure in downloading Identity Server "$currentVersion" $error_description${NC}"
+  echo -e "Failure in downloading Identity Server $error_description"
 else
   # If there is no error, print the success message
-  echo -e "${GREEN}Success: IS downloaded successfully.${NC}"
+  echo "Success: IS Pack downloaded successfully."
 fi
 
 # Unzip IS archive
-unzip -qq *.zip &
-wait $!
-echo "${GREEN}==> Unzipped  downloaded IS zip${NC}"
+unzip -qq wso2is.zip
 
 ls -a
