@@ -48,6 +48,7 @@ token_response=$(curl -s -X POST -d "$data" "https://www.googleapis.com/oauth2/v
 
 # Extract the access token from the response
 access_token=$(echo "$token_response" | jq -r .access_token)
+echo $access_token
 
 # https://drive.google.com/file/d/15nZ0gwIo-4YMibykGD979BG_olw5ChgV/view?usp=sharing
 
