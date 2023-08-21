@@ -139,7 +139,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Save JSON credentials to a file
         run: | 
-              echo '${{ secrets.JSON }}' > creds.json
+              echo '${{ secrets.JSON }}' > ${{ github.workspace }}/.github/migration-tester/migration-automation/creds.json
               pwd
               ls -a
       - name: Execute Migration Automation Script Ubuntu
