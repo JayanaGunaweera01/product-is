@@ -93,7 +93,7 @@ cd "$AUTOMATION_HOME"
 
 # Download needed wso2IS zip
 chmod +x download-GA-pack.sh
-bash download-GA-pack.sh "$keyJsonFile" "$currentVersion"
+bash download-GA-pack.sh "$keyJsonFile" "$os" "$currentVersion"
 
 #cd "$AUTOMATION_HOME"
 cd "$UBUNTU_HOME"
@@ -177,7 +177,7 @@ cd "$IS_HOME_NEW"
 
 # Download needed (latest) wso2IS zip
 chmod +x download-GA-pack.sh
-bash download-GA-pack.sh "$os" "$keyJsonFile"
+bash download-GA-pack.sh "$keyJsonFile" "$os" "$migratingVersion"
 
 cd "$AUTOMATION_HOME"
 chmod +x download-migration-client.sh
