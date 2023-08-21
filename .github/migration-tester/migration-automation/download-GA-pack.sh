@@ -6,7 +6,7 @@ RED='\033[0;31m\033[1m'   # red color
 NC='\033[0m'           # reset color
 
 # Get the value of the inputs
-os=$1
+os=$2
 currentVersion=$3
 
 # Source the env.sh file
