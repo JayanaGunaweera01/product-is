@@ -110,7 +110,7 @@ if echo "$response" | grep -q '"error":'; then
   echo -e "${RED}${BOLD}Failure in downloading Identity Server "$currentVersion" $error_description${NC}"
 else
   # If there is no error, print the success message
-  echo -e "${PURPLE}${BOLD}Success: IS downloaded successfully.${NC}"
+  echo -e "${GREEN}${BOLD}Success: IS downloaded successfully.${NC}"
 fi
 
 # Unzip IS archive
