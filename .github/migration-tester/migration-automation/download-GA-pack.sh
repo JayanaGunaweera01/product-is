@@ -6,14 +6,7 @@ RED='\033[0;31m\033[1m'   # red color
 NC='\033[0m'           # reset color
 
 # Get the value of the inputs
-os=$2
-currentVersion=$3
-
-# Source the env.sh file
-chmod +x ./env.sh
-./env.sh
-echo -e "${GREEN}==> Env file for $os sourced successfully${RESET}"
-
+currentVersion=$2
 
 # Initialize file_id variable
 file_id=""
