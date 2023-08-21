@@ -46,6 +46,8 @@ echo "file_id: $file_id"
 # Specify the Google Drive file URL
 file_url="https://www.googleapis.com/drive/v3/files/15nZ0gwIo-4YMibykGD979BG_olw5ChgV?alt=media"
 
+pwd
+ls -a
 # Download the file using the access token
 set -euo pipefail
 
@@ -57,7 +59,7 @@ base64stream() {
     base64 | tr '/+' '_-' | tr -d '=\n'
 }
 
-keyJsonFile="$2"
+keyJsonFile=$2
 scope="https://www.googleapis.com/auth/drive.readonly"
 valid_for_sec="${3:-3600}"
 valid_for_sec_numeric=$(echo "$valid_for_sec" | tr -d -c '[:digit:]')
