@@ -6,13 +6,28 @@ RED='\033[0;31m\033[1m'   # red color
 NC='\033[0m'           # reset color
 
 # Get the value of the inputs
-currentVersion=$2
+os=$2
+downloadingISVersion=$3
+
+# Setup file and path based on OS
+if [ "$os" = "ubuntu-latest" ]; then
+  cd "/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation"
+  chmod +x env.sh
+  . ./env.sh
+  echo "${GREEN}==> Env file for Ubuntu sourced successfully${RESET}"
+
+elif [ "$os" = "macos-latest" ]; then
+  cd "/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation"
+  chmod +x env.sh
+  source ./env.sh
+  echo "${GREEN}==> Env file for Mac sourced successfully${RESET}"
+fi
 
 # Initialize file_id variable
 file_id=""
 
-# Check the value of currentVersion and assign the corresponding environment variable to file_id
-case $currentVersion in
+# Check the value of IS version and assign the corresponding environment variable to file_id
+case $downloadingISVersion in
   5.9.0)
     file_id="$FILE_ID_5_9"
     ;;
@@ -37,7 +52,7 @@ esac
 echo "file_id: $file_id"
 
 # Specify the Google Drive file URL
-file_url="https://www.googleapis.com/drive/v3/files/15nZ0gwIo-4YMibykGD979BG_olw5ChgV?alt=media"
+file_url="https://www.googleapis.com/drive/v3/files/"$file_id"?alt=media"
 
 set -euo pipefail
 
