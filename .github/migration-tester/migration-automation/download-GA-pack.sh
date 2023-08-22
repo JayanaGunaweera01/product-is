@@ -14,13 +14,13 @@ if [ "$os" = "ubuntu-latest" ]; then
   cd "/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation"
   chmod +x env.sh
   . ./env.sh
-  echo "${GREEN}==> Env file for Ubuntu sourced successfully${RESET}"
+  echo "${GREEN}==> Env file for Ubuntu sourced successfully${NC}"
 
 elif [ "$os" = "macos-latest" ]; then
   cd "/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation"
   chmod +x env.sh
   source ./env.sh
-  echo "${GREEN}==> Env file for Mac sourced successfully${RESET}"
+  echo "${GREEN}==> Env file for Mac sourced successfully${NC}"
 fi
 
 # Initialize file_id variable
@@ -104,10 +104,11 @@ token_response=$(curl -s -X POST -d "$data" "https://www.googleapis.com/oauth2/v
 access_token=$(echo "$token_response" | jq -r .access_token)
 echo " test: $access_token"
 
-# https://drive.google.com/file/d/15nZ0gwIo-4YMibykGD979BG_olw5ChgV/view?usp=sharing
+# Use the file_id variable in downloading the IS zip
+echo "file_id: $file_id"
 
 # Specify the Google Drive file URL
-file_url="https://www.googleapis.com/drive/v3/files/15nZ0gwIo-4YMibykGD979BG_olw5ChgV?alt=media"
+file_url="https://www.googleapis.com/drive/v3/files/"$file_id"?alt=media"
 
 # Download the file using the access token
 response=$(curl -s -L -o wso2is.zip "$file_url" \
@@ -118,13 +119,15 @@ response=$(curl -s -L -o wso2is.zip "$file_url" \
 if echo "$response" | grep -q '"error":'; then
   # If there is an error, print the failure message with the error description
   error_description=$(echo "$response" | jq -r '.error_description')
-  echo -e "Failure in downloading Identity Server $error_description"
+  echo -e "${RED}==> Failure in downloading the GA Pack $downloadingISVersion. $error_description.${NC}"
+  
 else
   # If there is no error, print the success message
-  echo "Success: IS Pack downloaded successfully."
+  echo -e "${GREEN}==> Success: GA Pack $downloadingISVersion downloaded successfully.${NC}"
 fi
 
-# Unzip IS archive
+# Unzip GA pack archive
 unzip -qq wso2is.zip
 
+# View list to see the downloaded pack.
 ls -a
