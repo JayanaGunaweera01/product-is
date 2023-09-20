@@ -82,22 +82,17 @@ cd "$AUTOMATION_HOME"
 mkdir IS_HOME_OLD
 echo "${GREEN}==> Created a directory to place wso2IS${RESET}"
 
-# Navigate to folder
-cd IS_HOME_OLD
-echo "${GREEN}==> Navigated to home folder successfully${RESET}"
-
 cd "$AUTOMATION_HOME"
 
 # Download needed wso2IS zip
 chmod +x download-GA-pack.sh
-bash download-GA-pack.sh "$keyJsonFile" "$os" "$currentVersion"
+bash download-GA-pack.sh "$keyJsonFile" "$os" "$currentVersion" "current"
 
-#cd "$AUTOMATION_HOME"
-cd "$UBUNTU_HOME"
+cd "$AUTOMATION_HOME"
 
-# Update IS packs
-chmod +x update-pack.sh 
-sh update-pack.sh "$email" "$password" "current"
+# Update downloaded GA pack
+chmod +x update-GA-pack-ubuntu.sh
+sh update-GA-pack-ubuntu.sh "$email" "$password" "current"
 wait $!
 
 cd "$AUTOMATION_HOME"
@@ -169,14 +164,21 @@ echo "${GREEN}==> Directed to home successfully${RESET}"
 mkdir IS_HOME_NEW
 echo "${GREEN}==> Created a directory for placing latest wso2IS${RESET}"
 
-# Navigate to folder
-cd "$IS_HOME_NEW"
+cd "$AUTOMATION_HOME"
 
 # Download needed (latest) wso2IS zip
 chmod +x download-GA-pack.sh
-bash download-GA-pack.sh "$keyJsonFile" "$os" "$migratingVersion"
+bash download-GA-pack.sh "$keyJsonFile" "$os" "$migratingVersion" "migrating"
 
 cd "$AUTOMATION_HOME"
+
+# Update downloaded GA pack
+chmod +x update-GA-pack-ubuntu.sh
+sh update-GA-pack-ubuntu.sh "$email" "$password" "migrating"
+wait $!
+
+cd "$AUTOMATION_HOME"
+
 chmod +x download-migration-client.sh
 sh download-migration-client.sh "$migrationClient" &
 wait $!
