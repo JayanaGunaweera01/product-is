@@ -115,6 +115,8 @@ data="grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=$jwt_toke
 token_response=$(curl -s -X POST -d "$data" "https://www.googleapis.com/oauth2/v4/token")
 access_token=$(echo "$token_response" | jq -r .access_token)
 
+echo "Access token: $access_token"
+
 # Use the file_id variable in downloading the IS zip
 echo "file_id: $file_id"
 
